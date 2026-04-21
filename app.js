@@ -32,7 +32,7 @@ const fDT = iso => iso ? `${fD(iso)} ${fT(iso)}` : '';
 const fC = n => { const i = G('ri') || {}; return `${Number(n || 0).toLocaleString('ar-IQ')} ${i.currency || 'ل.ع'}`; };
 const daysBetween = (d1, d2) => Math.ceil((new Date(d1) - new Date(d2)) / (1000 * 60 * 60 * 24));
 
-const addA = (txt, color = '#f0a500') => {
+const addA = (txt, color = '#e63030') => {
   const a = G('act') || [];
   a.unshift({ txt, time: new Date().toISOString(), color, userId: CU?.id });
   if (a.length > 50) a.pop();
@@ -172,7 +172,7 @@ const buildSidebar = () => {
   items.forEach(it => {
     if (!canSee(it.id)) return;
     if (it.sec !== lastSec) { html += `<div class="sb-sec">${it.sec}</div>`; lastSec = it.sec; }
-    html += `<button class="sb-it" onclick="go('${it.id}')"><span class="sb-ic">${it.ic}</span> ${it.lbl}</button>`;
+    html += `<button class="sb-it" data-label="${it.lbl}" onclick="go('${it.id}')"><span class="sb-ic">${it.ic}</span></button>`;
   });
   nav.innerHTML = html;
 };
@@ -270,8 +270,8 @@ const renderDash = () => {
   if (cS) cS.destroy();
   cS = new Chart(ctx, {
     type: 'line',
-    data: { labels: days, datasets: [{ data: sales, borderColor: '#f0a500', backgroundColor: 'rgba(240,165,0,0.05)', borderWidth: 2, tension: .4, fill: true, pointBackgroundColor: '#f0a500', pointRadius: 4, pointBorderColor: '#1e2330', pointBorderWidth: 2 }] },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#4a5168', font: { family: 'IBM Plex Sans Arabic', size: 11 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#4a5168', font: { family: 'IBM Plex Sans Arabic' } } } } }
+    data: { labels: days, datasets: [{ data: sales, borderColor: '#e63030', backgroundColor: 'rgba(230,48,48,0.06)', borderWidth: 2, tension: .4, fill: true, pointBackgroundColor: '#e63030', pointRadius: 4, pointBorderColor: '#1e2330', pointBorderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#6b6b6b', font: { family: 'IBM Plex Sans Arabic', size: 11 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#6b6b6b', font: { family: 'IBM Plex Sans Arabic' } } } } }
   });
 
   const acts = G('act') || [];
@@ -382,7 +382,7 @@ const drawAllTables = () => {
 
 /* Build realistic table with chairs around it */
 const buildTableGroup = (t, session, isSelected) => {
-  const statusColor = { free: '#00bfa5', occupied: '#f0a500', reserved: '#3d9cf0' }[t.status] || '#4a5168';
+  const statusColor = { free: '#00bfa5', occupied: '#e63030', reserved: '#3d9cf0' }[t.status] || '#4a5168';
   const objects = [];
   const capacity = t.capacity || 4;
   const chairColor = '#5a3920';
@@ -559,7 +559,7 @@ const buildTableGroup = (t, session, isSelected) => {
     const topOffset = t.shape === 'round' ? -80 : (t.shape === 'rect' ? -68 : -75);
     objects.push(new fabric.Rect({
       left: 0, top: topOffset, width: 62, height: 22, rx: 11, ry: 11,
-      fill: 'rgba(240,165,0,0.95)', originX: 'center', originY: 'center',
+      fill: 'rgba(230,48,48,0.95)', originX: 'center', originY: 'center',
       shadow: 'rgba(0,0,0,0.3) 0 2px 4px',
     }));
     objects.push(new fabric.Text(`⏱ ${timeStr}`, {
@@ -1710,7 +1710,7 @@ const runInvReports = () => {
   }
   const dayLabels = days.map(d => new Date(d).toLocaleDateString('ar-IQ', { day: 'numeric', month: 'short' }));
   const datasets = top5Ids.map((pid, idx) => {
-    const colors = ['#f0a500', '#00bfa5', '#e05c2a', '#3d9cf0', '#a855f7'];
+    const colors = ['#e63030', '#00bfa5', '#e05c2a', '#3d9cf0', '#a855f7'];
     const p = prods.find(x => x.id === pid);
     const data = days.map(day =>
       filtered.filter(m => m.product_id === pid && m.type === 'sale' && m.created_at.startsWith(day))
@@ -1729,8 +1729,8 @@ const runInvReports = () => {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { position: 'bottom', labels: { color: '#8892a4', font: { family: 'IBM Plex Sans Arabic' }, padding: 8, boxWidth: 12 } } },
         scales: {
-          x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#4a5168', font: { family: 'IBM Plex Sans Arabic', size: 10 } } },
-          y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#4a5168', font: { family: 'IBM Plex Sans Arabic' } } }
+          x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#6b6b6b', font: { family: 'IBM Plex Sans Arabic', size: 10 } } },
+          y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#6b6b6b', font: { family: 'IBM Plex Sans Arabic' } } }
         }
       }
     });
@@ -1745,7 +1745,7 @@ const runInvReports = () => {
   if (cInvValue) cInvValue.destroy();
   cInvValue = new Chart(ctx2, {
     type: 'doughnut',
-    data: { labels: Object.keys(catValue), datasets: [{ data: Object.values(catValue), backgroundColor: ['#f0a500', '#00bfa5', '#e05c2a', '#3d9cf0', '#a855f7'], borderColor: '#1e2330', borderWidth: 3 }] },
+    data: { labels: Object.keys(catValue), datasets: [{ data: Object.values(catValue), backgroundColor: ['#e63030', '#00bfa5', '#e05c2a', '#3d9cf0', '#a855f7'], borderColor: '#1e1e1e', borderWidth: 3 }] },
     options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#8892a4', font: { family: 'IBM Plex Sans Arabic' }, padding: 10 } } } }
   });
 };
@@ -1859,7 +1859,7 @@ const renderReportsOverview = () => {
   if (Object.keys(cm).length) {
     cR = new Chart(ctx, {
       type: 'doughnut',
-      data: { labels: Object.keys(cm), datasets: [{ data: Object.values(cm), backgroundColor: ['#f0a500', '#00bfa5', '#e05c2a', '#3d9cf0', '#e84060', '#a855f7'], borderColor: '#1e2330', borderWidth: 3 }] },
+      data: { labels: Object.keys(cm), datasets: [{ data: Object.values(cm), backgroundColor: ['#e63030', '#00bfa5', '#e05c2a', '#3d9cf0', '#e84060', '#a855f7'], borderColor: '#1e1e1e', borderWidth: 3 }] },
       options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#8892a4', font: { family: 'IBM Plex Sans Arabic' }, padding: 12 } } } }
     });
   }
